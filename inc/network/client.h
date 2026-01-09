@@ -12,7 +12,7 @@ typedef struct Client {
 
 extern Client *g_client;
 
-#define MAX_PLAYERS 64;
+#define MAX_PLAYERS 64
 
 void client_create(void);
 void client_poll(int timeout_ms);

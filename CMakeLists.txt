@@ -33,7 +33,7 @@ target_link_options(BebisOnline PRIVATE
     "SHELL:-s WASM=1"
     "SHELL:-s ALLOW_MEMORY_GROWTH=1"
     "SHELL:-s ASYNCIFY"
-    "--embed-file=bebis.png"
+    "--embed-file=resource/bebis.png"
     "SHELL:-s EXPORTED_FUNCTIONS=['_on_ws_open_c','_on_ws_message_c','_on_ws_close_c','_main']"
     "SHELL:-s EXPORTED_RUNTIME_METHODS=['ccall','cwrap','UTF8ToString','stringToUTF8']"
 )
