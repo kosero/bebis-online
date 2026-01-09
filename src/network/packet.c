@@ -24,12 +24,12 @@ static RemotePlayerData *get_or_create_player(int id) {
       remote_players[i].active = 1;
       remote_players[i].id = id;
       remote_players[i].position = (Vector2){0};
-      TraceLog(LOG_INFO, "spaw remote player %d\n", id);
+      TraceLog(LOG_INFO, "spawn remote player %d\n", id);
       return &remote_players[i];
     }
-
-    return NULL;
   }
+
+  return NULL;
 }
 
 void handle_player_position(int id, Vector2 position) {

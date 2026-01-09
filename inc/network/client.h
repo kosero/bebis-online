@@ -17,7 +17,7 @@ extern Client *g_client;
 void client_create(void);
 void client_poll(int timeout_ms);
 void client_send_text(const char *text);
-void client_destrooy(void);
+void client_destroy(void);
 
 extern void EMSCRIPTEN_KEEPALIVE on_ws_open_c(void);
 extern void EMSCRIPTEN_KEEPALIVE on_ws_message_c(const char *msg);

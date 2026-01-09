@@ -1,5 +1,6 @@
 #include "network/client.h"
 #include "emscripten/em_macros.h"
+#include "network/packet.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,7 +16,7 @@ EM_JS(void, js_connect_ws, (const char *url), {
   Module.ws.onopen = function() { _on_ws_open_c(); };
 
   Module.ws.onmessage = function(event) {
-    if (typeof event.data == = 'string') {
+    if (typeof event.data === 'string') {
       let len = lengthBytesUTF8(event.data) + 1;
       let c_str = _malloc(len);
       stringToUTF8(event.data, c_str, len);
@@ -30,7 +31,7 @@ EM_JS(void, js_connect_ws, (const char *url), {
 })
 
 EM_JS(void, js_send_ws, (const char *msg), {
-  if (Module.ws &&Module.ws.readyState == = WebSocket.OPEN) {
+  if (Module.ws &&Module.ws.readyState === WebSocket.OPEN) {
     Module.ws.send(UTF8ToString(msg));
   } else {
     console.error("WebSocket not open.");
@@ -51,7 +52,26 @@ void EMSCRIPTEN_KEEPALIVE on_ws_open_c(void) {
 }
 
 void EMSCRIPTEN_KEEPALIVE on_ws_message_c(const char *msg) {
-  // TODO: handle packet
+  int id;
+  float x, y;
+
+  if (strstr(msg, "\"type\": \"id\"")) {
+    sscanf(msg, "{ \"type\": \"id\", \"id\": %d }", &id);
+    id_assignment(id);
+  }
+
+  if (strstr(msg, "\"type\": \"pos\"")) {
+    sscanf(
+        msg,
+        "{ \"type\": \"pos\", \"id\": %d, \"player_position\": [ %f , %f ] }",
+        &id, &x, &y);
+    handle_player_position(id, (Vector2){x, y});
+  }
+
+  if (strstr(msg, "\"type\": \"leave\"")) {
+    sscanf(msg, "{ \"type\": \"leave\", \"id\": %d }", &id);
+    remove_player(id);
+  }
 }
 
 void EMSCRIPTEN_KEEPALIVE on_ws_close_c(void) {

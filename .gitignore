@@ -23,7 +23,7 @@ build/
 
 # Libraries
 *.lib
-*.a
+# *.a
 *.la
 *.lo
 

@@ -2,7 +2,6 @@
 #include "network/packet.h"
 #include <emscripten/emscripten.h>
 #include <raylib.h>
-#include <stdio.h>
 
 Texture2D tex;
 Vector2 pos = {400, 300};
@@ -20,13 +19,14 @@ void GameLoop(void) {
 }
 
 int main(void) {
-  InitWindow(GetScreenWidth(), GetScreenHeight(), "Bebis Online!");
+  InitWindow(1024, 800, "Bebis Online!");
   init();
 
   client_create();
 
   emscripten_set_main_loop(GameLoop, 60, 1);
 
+  client_destroy();
   return 0;
 }
 
