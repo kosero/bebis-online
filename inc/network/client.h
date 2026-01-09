@@ -3,11 +3,10 @@
 
 #include <stdbool.h>
 #include <emscripten/emscripten.h>
-#include <stdint.h>
 
 typedef struct Client {
   int ws_id;
-  uint8_t client_id;
+  int client_id;
   bool connected;
   bool interrupted;
 } Client;
@@ -15,9 +14,9 @@ typedef struct Client {
 extern Client *g_client;
 
 #define MAX_PLAYERS 64
+#define RECONNECT_INTERVAL 3.0
 
 void client_create(void);
-void client_poll(int timeout_ms);
 void client_send_text(const char *text);
 void client_destroy(void);
 

@@ -90,8 +90,6 @@ void client_create(void) {
   js_connect_ws("wss://ws.atchannel.top");
 }
 
-void client_poll(int timeout_ms) { (void)timeout_ms; }
-
 void client_send_text(const char *text) {
   if (g_client && g_client->connected) {
     js_send_ws(text);

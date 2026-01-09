@@ -7,14 +7,18 @@
 RemotePlayerData remote_players[MAX_PLAYERS] = {0};
 
 void id_assignment(uint8_t id) {
+  printf("ID PACKET RECEIVED: %d\n", id);
+
   if (g_client->client_id != -1)
     return;
 
   g_client->client_id = id;
-  TraceLog(LOG_INFO, "Assigned client id: %d\n", id);
+  printf("CLIENT ID SET: %d\n", id);
 }
 
 static RemotePlayerData *get_or_create_player(uint8_t id) {
+  TraceLog(LOG_INFO, "get_or_create_player id=%d", id);
+
   for (int i = 0; i < MAX_PLAYERS; i++) {
     if (remote_players[i].active && remote_players[i].id == id)
       return &remote_players[i];
@@ -34,14 +38,23 @@ static RemotePlayerData *get_or_create_player(uint8_t id) {
 }
 
 void handle_player_position(uint8_t id, Vector2 position, bool flip_h) {
-  if (id == g_client->client_id)
+  printf("POS PACKET id=%d pos=(%f,%f)\n", id, position.x, position.y);
+
+  if (id == g_client->client_id) {
+    printf("IGNORED (self)\n");
     return;
+  }
 
   RemotePlayerData *p = get_or_create_player(id);
-  if (p) {
-    p->position = position;
-    p->flip_h = flip_h;
+  if (!p) {
+    printf("NO SLOT FOR PLAYER %d\n", id);
+    return;
   }
+
+  p->position = position;
+  p->flip_h = flip_h;
+
+  printf("UPDATED REMOTE %d\n", id);
 }
 
 void send_player_position(Vector2 position, int flip_h) {
