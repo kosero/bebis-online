@@ -1,10 +1,10 @@
+#include "graphics/sprite.h"
 #include "network/client.h"
 #include "network/packet.h"
 #include <emscripten/emscripten.h>
 #include <raylib.h>
 
-Texture2D tex;
-Vector2 pos = {400, 300};
+Sprite player;
 float speed = 200.0f;
 
 static void init(void);
@@ -27,35 +27,51 @@ int main(void) {
   emscripten_set_main_loop(GameLoop, 60, 1);
 
   client_destroy();
+  UnloadTexture(player.texture);
   return 0;
 }
 
-static void init(void) { tex = LoadTexture("resource/bebis.png"); }
+static void init(void) {
+  player = sprite_new("resource/bebis.png");
+  player.position = (Vector2){400, 300};
+  player.scale = 1.0f;
+  player.rotation = 0.0f;
+  player.flip_h = 0;
+  player.flip_v = 0;
+  player.alpha = 255;
+}
 
 static void input(void) {
   float dt = GetFrameTime();
-
   if (IsKeyDown(KEY_D))
-    pos.x += speed * dt;
+    player.position.x += speed * dt;
   if (IsKeyDown(KEY_A))
-    pos.x -= speed * dt;
+    player.position.x -= speed * dt;
   if (IsKeyDown(KEY_S))
-    pos.y += speed * dt;
+    player.position.y += speed * dt;
   if (IsKeyDown(KEY_W))
-    pos.y -= speed * dt;
-
+    player.position.y -= speed * dt;
   client_poll(0);
-  send_player_position(pos);
+  send_player_position(player.position);
 }
 
 static void render(void) {
   ClearBackground(BLACK);
-  DrawTexture(tex, (int)pos.x, (int)pos.y, WHITE);
+  sprite_render(&player);
 
   for (int i = 0; i < MAX_PLAYERS; i++) {
     if (remote_players[i].active) {
-      DrawTexture(tex, (int)remote_players[i].position.x,
-                  (int)remote_players[i].position.y, WHITE);
+      Sprite temp;
+      temp.texture = player.texture;
+      temp.position = remote_players[i].position;
+      temp.offset = (Vector2){0.0f, 0.0f};
+      temp.origin = player.origin;
+      temp.scale = 1.0f;
+      temp.rotation = 0.0f;
+      temp.flip_h = 0;
+      temp.flip_v = 0;
+      temp.alpha = 255;
+      sprite_render(&temp);
     }
   }
 }
