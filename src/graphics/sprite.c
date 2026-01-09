@@ -1,6 +1,5 @@
 #include "graphics/sprite.h"
 #include "raylib.h"
-#include <iso646.h>
 
 Sprite sprite_new(const char *tex_path) {
   Sprite s;

@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct Sprite {
   Texture2D texture;
@@ -11,8 +12,8 @@ typedef struct Sprite {
   Vector2 offset;
   float scale;
   float rotation;
-  int flip_h;
-  int flip_v;
+  bool flip_h;
+  bool flip_v;
   uint8_t alpha;
 } Sprite;
 

@@ -1,8 +1,6 @@
 #include "network/client.h"
-#include "emscripten/em_macros.h"
 #include "network/packet.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 Client *g_client = NULL;
@@ -53,6 +51,7 @@ void EMSCRIPTEN_KEEPALIVE on_ws_open_c(void) {
 
 void EMSCRIPTEN_KEEPALIVE on_ws_message_c(const char *msg) {
   int id;
+  int flip;
   float x, y;
 
   if (strstr(msg, "\"type\": \"id\"")) {
@@ -63,9 +62,10 @@ void EMSCRIPTEN_KEEPALIVE on_ws_message_c(const char *msg) {
   if (strstr(msg, "\"type\": \"pos\"")) {
     sscanf(
         msg,
-        "{ \"type\": \"pos\", \"id\": %d, \"player_position\": [ %f , %f ] }",
-        &id, &x, &y);
-    handle_player_position(id, (Vector2){x, y});
+        "{ \"type\": \"pos\", \"id\": %d, \"player_position\": [ %f , %f ], \"flip\": %d }",
+        &id, &x, &y, &flip);
+
+    handle_player_position(id, (Vector2){x, y}, flip);
   }
 
   if (strstr(msg, "\"type\": \"leave\"")) {

@@ -3,6 +3,8 @@
 
 #include "network/client.h"
 #include "raylib.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 typedef enum PacketInfo {
   ID_ASSIGNMENT = 0,
@@ -11,16 +13,17 @@ typedef enum PacketInfo {
 } PacketInfo;
 
 typedef struct {
-  int active;
-  int id;
+  bool active;
+  uint8_t id;
   Vector2 position;
+  int flip_h;
 } RemotePlayerData;
 
 extern RemotePlayerData remote_players[MAX_PLAYERS];
 
-void id_assignment(int id);
-void handle_player_position(int id, Vector2 position);
-void send_player_position(Vector2 position);
-void remove_player(int id);
+void id_assignment(uint8_t id);
+void handle_player_position(uint8_t id, Vector2 position, bool flip_h);
+void send_player_position(Vector2 position, int flip_h);
+void remove_player(uint8_t id);
 
 #endif // !PACKET_H

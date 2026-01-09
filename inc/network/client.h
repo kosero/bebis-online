@@ -1,13 +1,15 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include <stdbool.h>
 #include <emscripten/emscripten.h>
+#include <stdint.h>
 
 typedef struct Client {
   int ws_id;
-  int client_id;
-  int connected;
-  int interrupted;
+  uint8_t client_id;
+  bool connected;
+  bool interrupted;
 } Client;
 
 extern Client *g_client;
